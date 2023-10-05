@@ -32,6 +32,12 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  final mykey = GlobalKey<FormState>();
+  void veriyPhoneNumber() {
+    final isValid = mykey.currentState!.validate();
+    if (isValid) {}
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,57 +47,76 @@ class _LoginScreenState extends State<LoginScreen> {
         backgroundColor: backgroundColor,
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(18.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Text(
-                'WhatsApp will need to verify your phone number',
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              TextButton(
-                onPressed: pickCountry,
-                child: const Text('Pick country'),
-              ),
-              const SizedBox(
-                height: 5,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(countryCode != null ? '+$countryCode' : ''),
-                  const SizedBox(
-                    width: 15,
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.7,
-                    child: TextField(
-                      controller: phoneController,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        hintText: 'Enter your phone number',
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(18.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Text(
+                  'WhatsApp will need to verify your phone number',
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                TextButton(
+                  onPressed: pickCountry,
+                  child: const Text('Pick country'),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(countryCode != null ? '+$countryCode' : ''),
+                    const SizedBox(
+                      width: 15,
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.7,
+                      child: Form(
+                        key: mykey,
+                        child: TextFormField(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (value) {
+                            if (countryCode == null) {
+                              return 'Please pick a country code';
+                            }
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your phone number';
+                            }
+
+                            return null;
+                          },
+                          controller: phoneController,
+                          decoration: const InputDecoration(
+                            errorStyle: TextStyle(
+                              fontSize: 14,
+                            ),
+                            border: InputBorder.none,
+                            filled: true,
+                            hintText: 'Enter your phone number',
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.55,
-              ),
-              SizedBox(
-                width: 90,
-                child: CustomButton(
-                  text: 'Next',
-                  onPressed: () {},
-                  fontsize: 18,
+                  ],
                 ),
-              ),
-            ],
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.585,
+                ),
+                SizedBox(
+                  width: 90,
+                  child: CustomButton(
+                    text: 'Next',
+                    onPressed: veriyPhoneNumber,
+                    fontsize: 18,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
