@@ -86,7 +86,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       child: Form(
                         key: mykey,
                         child: TextFormField(
-                          autovalidateMode: AutovalidateMode.always,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (value) {
                             if (countryCode == null) {
                               return 'Please pick a country code';
