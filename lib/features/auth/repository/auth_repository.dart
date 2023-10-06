@@ -10,7 +10,7 @@ final authRepositoryProvider = Provider((ref) {
   return AuthRepository(
     auth: FirebaseAuth.instance,
     firestore: FirebaseFirestore.instance,
-   );
+  );
 });
 
 class AuthRepository {

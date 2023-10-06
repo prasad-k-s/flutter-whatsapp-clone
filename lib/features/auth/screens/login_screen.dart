@@ -1,17 +1,19 @@
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_whatsapp_clone/colors.dart';
 import 'package:flutter_whatsapp_clone/common/widgets/custom_button.dart';
+import 'package:flutter_whatsapp_clone/features/auth/controller/auth_controller.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   static const routeName = '/login-screen';
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   final TextEditingController phoneController = TextEditingController();
   String? countryCode;
   @override
@@ -33,9 +35,14 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   final mykey = GlobalKey<FormState>();
+
   void veriyPhoneNumber() {
     final isValid = mykey.currentState!.validate();
-    if (isValid) {}
+    if (isValid) {
+      ref
+          .read(authControllerProvider)
+          .signinWithPhone(context: context, phoneNumber: '+$countryCode${phoneController.text.trim()}');
+    }
   }
 
   @override
@@ -79,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Form(
                         key: mykey,
                         child: TextFormField(
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          autovalidateMode: AutovalidateMode.always,
                           validator: (value) {
                             if (countryCode == null) {
                               return 'Please pick a country code';

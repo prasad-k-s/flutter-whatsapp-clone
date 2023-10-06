@@ -2,29 +2,31 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleIdentifier</key>
+	<string></string>
 	<key>API_KEY</key>
-	<string>AIzaSyBfPab3UUonfq1kGP8PF4LhXrGcJ2BDmmI</string>
+	<string>AIzaSyBSzWW9pr2l135M6KKHkrAIWs-nZJm_0aU</string>
 	<key>GCM_SENDER_ID</key>
-	<string>520798995994</string>
+	<string>1055377943873</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.example.flutterWhatsappClone</string>
 	<key>PROJECT_ID</key>
-	<string>flutter-whatsapp-clone-4b24e</string>
+	<string>flutter-whatsapp-clone-c852c</string>
 	<key>STORAGE_BUCKET</key>
-	<string>flutter-whatsapp-clone-4b24e.appspot.com</string>
+	<string>flutter-whatsapp-clone-c852c.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_APPINVITE_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_GCM_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:520798995994:ios:26c2468a2f30cb7e04f3a3</string>
+	<string>1:1055377943873:ios:17e79ad0f8675281cf45c0</string>
 </dict>
 </plist>
