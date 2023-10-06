@@ -5,18 +5,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_whatsapp_clone/common/utility/snackbar.dart';
 import 'package:flutter_whatsapp_clone/features/auth/screens/otp_screen.dart';
+import 'package:flutter_whatsapp_clone/features/auth/screens/user_information_screen.dart';
 
-final authRepositoryProvider = Provider((ref) {
+final authRepositoryProvider = StateNotifierProvider<AuthRepository, bool>((ref) {
   return AuthRepository(
     auth: FirebaseAuth.instance,
     firestore: FirebaseFirestore.instance,
   );
 });
 
-class AuthRepository {
+class AuthRepository extends StateNotifier<bool> {
   final FirebaseAuth auth;
   final FirebaseFirestore firestore;
-  AuthRepository({required this.auth, required this.firestore});
+  AuthRepository({required this.auth, required this.firestore}) : super(false);
 
   void signInWithPhone(String phoneNumber, BuildContext context) async {
     try {
@@ -36,6 +37,36 @@ class AuthRepository {
         },
         codeAutoRetrievalTimeout: (verificationId) {},
       );
+    } on FirebaseAuthException catch (e) {
+      throw Exception(e.message);
+    } catch (e) {
+      if (context.mounted) {
+        showSnackbar(
+          context: context,
+          text: e.toString(),
+          contentType: ContentType.failure,
+          title: 'Oh snap!',
+        );
+      }
+    }
+  }
+
+  void verifyOTP({
+    required BuildContext context,
+    required String verificationId,
+    required String userOTP,
+  }) async {
+    try {
+      state = true;
+      PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
+        verificationId: verificationId,
+        smsCode: userOTP,
+      );
+      await auth.signInWithCredential(phoneAuthCredential);
+      state = false;
+      if (context.mounted) {
+        Navigator.pushNamedAndRemoveUntil(context, UserInformationScreen.routeName, (route) => false);
+      }
     } on FirebaseAuthException catch (e) {
       throw Exception(e.message);
     } catch (e) {
