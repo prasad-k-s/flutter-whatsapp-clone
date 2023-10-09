@@ -10,6 +10,7 @@ class SelectContactsScreen extends ConsumerWidget {
 
   void selectContact(WidgetRef ref, Contact selectContact, BuildContext context) {
     ref.read(selectContactControllerProvider).selectContact(selectContact, context);
+    
   }
 
   @override
@@ -50,7 +51,7 @@ class SelectContactsScreen extends ConsumerWidget {
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ListTile(
-                    onTap: () => selectContact(ref, contact, context),
+                    onTap: () =>selectContact(ref,contact,context),
                     leading: contact.photo != null
                         ? CircleAvatar(
                             backgroundImage: Image.memory(contact.photo!).image,

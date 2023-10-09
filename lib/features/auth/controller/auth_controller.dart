@@ -53,4 +53,8 @@ class AuthController {
     UserModel? userModel = await authRepository.getCurrentUserData();
     return userModel;
   }
+
+  Stream<UserModel> userData(String userId) {
+    return authRepository.userData(userId);
+  }
 }
