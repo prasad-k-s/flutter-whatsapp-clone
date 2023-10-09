@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp_clone/colors.dart';
 
-class ErrorWidget extends StatelessWidget {
-  const ErrorWidget({super.key, required this.error});
+class MyErrorWidget extends StatelessWidget {
+  const MyErrorWidget({super.key, required this.error});
   final String error;
 
   @override
