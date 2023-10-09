@@ -62,5 +62,7 @@
 <string>Need permission for video call</string>
 	<key>NSMicrophoneUsageDescription</key>
 <string>Need permission for video call</string>
+ <key>NSContactsUsageDescription</key>
+    <string>Need permission to display contacts</string>
 </dict>
 </plist>

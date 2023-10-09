@@ -102,7 +102,7 @@ class AuthRepository extends StateNotifier<bool> {
           uid: uid,
           profilePic: photoUrl,
           isOnline: true,
-          phoneNumber: auth.currentUser!.uid,
+          phoneNumber: auth.currentUser!.phoneNumber!,
           groupId: [],
         );
         await firestore.collection('users').doc(uid).set(
