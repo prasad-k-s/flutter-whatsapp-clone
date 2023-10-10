@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_whatsapp_clone/common/widgets/error.dart';
 import 'package:flutter_whatsapp_clone/features/chat/controller/chat_controller.dart';
@@ -8,13 +9,31 @@ import 'package:flutter_whatsapp_clone/widgets/my_message_card.dart';
 import 'package:flutter_whatsapp_clone/widgets/sender_message_card.dart';
 import 'package:intl/intl.dart';
 
-class ChatList extends ConsumerWidget {
+class ChatList extends ConsumerStatefulWidget {
   const ChatList({required this.recieverId, Key? key}) : super(key: key);
   final String recieverId;
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _ChatListState();
+}
+
+class _ChatListState extends ConsumerState<ChatList> {
+  final ScrollController scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return StreamBuilder<List<Message>>(
-      stream: ref.watch(chatContollerProvider).chatStream(recieverId),
+      stream: ref.watch(chatContollerProvider).chatStream(widget.recieverId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
@@ -26,7 +45,12 @@ class ChatList extends ConsumerWidget {
             error: snapshot.error.toString(),
           );
         }
+
+        SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+          scrollController.jumpTo(scrollController.position.maxScrollExtent);
+        });
         return ListView.builder(
+          controller: scrollController,
           itemCount: snapshot.data!.length,
           itemBuilder: (context, index) {
             final messageData = snapshot.data![index];
