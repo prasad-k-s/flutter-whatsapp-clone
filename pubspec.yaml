@@ -45,6 +45,7 @@ dependencies:
   flutter_otp_text_field: ^1.1.1
   file_picker: ^5.5.0
   flutter_contacts: ^1.1.7+1
+  uuid: ^4.1.0
 
 
 dev_dependencies:
