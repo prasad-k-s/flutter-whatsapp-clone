@@ -60,6 +60,7 @@ class _ChatListState extends ConsumerState<ChatList> {
                 date: DateFormat.Hm().format(
                   messageData.timeSent,
                 ),
+                type: messageData.type,
               );
             }
             return SenderMessageCard(
@@ -67,6 +68,7 @@ class _ChatListState extends ConsumerState<ChatList> {
               date: DateFormat.Hm().format(
                 messageData.timeSent,
               ),
+              type: messageData.type,
             );
           },
         );

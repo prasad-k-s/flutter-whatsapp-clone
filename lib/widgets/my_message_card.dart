@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp_clone/colors.dart';
+import 'package:flutter_whatsapp_clone/common/enum/message_enum.dart';
+import 'package:flutter_whatsapp_clone/features/chat/widgets/display_message.dart';
 
 class MyMessageCard extends StatelessWidget {
   final String message;
   final String date;
+  final MessageEnum type;
 
-  const MyMessageCard({Key? key, required this.message, required this.date}) : super(key: key);
+  const MyMessageCard({Key? key, required this.message, required this.date, required this.type}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,17 +26,22 @@ class MyMessageCard extends StatelessWidget {
           child: Stack(
             children: [
               Padding(
-                padding: EdgeInsets.only(
-                  left: message.length == 1 ? 35 : 10,
-                  right: 30,
-                  top: 5,
-                  bottom: 20,
-                ),
-                child: Text(
-                  message,
-                  style: const TextStyle(
-                    fontSize: 16,
-                  ),
+                padding: type == MessageEnum.text
+                    ? EdgeInsets.only(
+                        left: message.length == 1 ? 35 : 10,
+                        right: 30,
+                        top: 5,
+                        bottom: 20,
+                      )
+                    : const EdgeInsets.only(
+                        left: 5,
+                        top: 5,
+                        right: 5,
+                        bottom: 25,
+                      ),
+                child: DisplayMessage(
+                  message: message,
+                  type: type,
                 ),
               ),
               Positioned(
