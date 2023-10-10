@@ -97,6 +97,7 @@ class ChatRepository {
       messageId: messageId,
       type: messageType,
       isSeen: false,
+      timeSent: timeSent,
     );
 
     await firestore
@@ -155,5 +156,29 @@ class ChatRepository {
         showSnackbar(context: context, text: e.toString(), contentType: ContentType.failure, title: 'Oh no!');
       }
     }
+  }
+
+  Stream<List<Message>> getChatMessages(String recieverId) {
+    return firestore
+        .collection('users')
+        .doc(auth.currentUser!.uid)
+        .collection('chats')
+        .doc(recieverId)
+        .collection('messages')
+        .orderBy('timeSent')
+        .snapshots()
+        .map(
+      (event) {
+        List<Message> messages = [];
+        for (var document in event.docs) {
+          messages.add(
+            Message.fromMap(
+              document.data(),
+            ),
+          );
+        }
+        return messages;
+      },
+    );
   }
 }

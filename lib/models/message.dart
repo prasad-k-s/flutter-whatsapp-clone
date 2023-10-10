@@ -9,6 +9,7 @@ class Message {
   final String messageId;
   final MessageEnum type;
   final bool isSeen;
+  final DateTime timeSent;
   Message({
     required this.senderId,
     required this.recieverId,
@@ -16,6 +17,7 @@ class Message {
     required this.messageId,
     required this.type,
     required this.isSeen,
+    required this.timeSent,
   });
 
   Message copyWith({
@@ -25,6 +27,7 @@ class Message {
     String? messageId,
     MessageEnum? type,
     bool? isSeen,
+    DateTime? timeSent,
   }) {
     return Message(
       senderId: senderId ?? this.senderId,
@@ -33,6 +36,7 @@ class Message {
       messageId: messageId ?? this.messageId,
       type: type ?? this.type,
       isSeen: isSeen ?? this.isSeen,
+      timeSent: timeSent ?? this.timeSent,
     );
   }
 
@@ -44,6 +48,7 @@ class Message {
       'messageId': messageId,
       'type': type.type,
       'isSeen': isSeen,
+      'timeSent': timeSent.millisecondsSinceEpoch,
     };
   }
 
@@ -55,6 +60,7 @@ class Message {
       messageId: map['messageId'] as String,
       type: (map['type'] as String).toEnum(),
       isSeen: map['isSeen'] as bool,
+      timeSent: DateTime.fromMillisecondsSinceEpoch(map['timeSent'] as int),
     );
   }
 }
