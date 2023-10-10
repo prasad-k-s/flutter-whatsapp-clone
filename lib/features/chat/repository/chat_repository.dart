@@ -55,7 +55,7 @@ class ChatRepository {
     );
   }
 
-  void _saveDataToContactsSubCollection({
+  Future<void> _saveDataToContactsSubCollection({
     required UserModel senderUserData,
     required UserModel recieverUserData,
     required String text,
@@ -84,7 +84,7 @@ class ChatRepository {
         );
   }
 
-  void _saveMessageToMessageSubCollection({
+  Future<void> _saveMessageToMessageSubCollection({
     required String recieveUserId,
     required String text,
     required DateTime timeSent,
@@ -185,7 +185,7 @@ class ChatRepository {
     );
   }
 
-  void sendFileMessage({
+  Future<void> sendFileMessage({
     required BuildContext context,
     required File file,
     required String recieverUserId,
@@ -194,7 +194,6 @@ class ChatRepository {
     required MessageEnum messageEnum,
   }) async {
     try {
-     
       var timeSent = DateTime.now();
       var messageId = const Uuid().v1();
 
@@ -224,14 +223,14 @@ class ChatRepository {
           break;
       }
 
-      _saveDataToContactsSubCollection(
+      await _saveDataToContactsSubCollection(
           senderUserData: senderUserData,
           recieverUserData: recieverUserData,
           text: contactMsg,
           timeSent: timeSent,
           recieverUserId: recieverUserId);
 
-      _saveMessageToMessageSubCollection(
+      await _saveMessageToMessageSubCollection(
         recieveUserId: recieverUserId,
         text: url,
         timeSent: timeSent,
@@ -240,12 +239,10 @@ class ChatRepository {
         recieverUserName: recieverUserData.name,
         messageType: messageEnum,
       );
-      
     } catch (e) {
       if (context.mounted) {
         showSnackbar(context: context, text: e.toString(), contentType: ContentType.failure, title: 'Oh no!');
       }
-      
     }
   }
 }

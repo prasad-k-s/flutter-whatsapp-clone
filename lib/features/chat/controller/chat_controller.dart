@@ -43,14 +43,14 @@ class ChatController {
     });
   }
 
-  void sendFileMessage(
+  Future<void> sendFileMessage(
     BuildContext context,
     File file,
     String recieverUserId,
     MessageEnum messageEnum,
-  ) {
-    ref.read(userDataAuthProvider).whenData((UserModel? senderUserData) {
-      chatRepository.sendFileMessage(
+  ) async {
+    ref.read(userDataAuthProvider).whenData((UserModel? senderUserData) async {
+      await chatRepository.sendFileMessage(
         context: context,
         recieverUserId: recieverUserId,
         file: file,

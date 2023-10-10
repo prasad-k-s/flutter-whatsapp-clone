@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp_clone/colors.dart';
 import 'package:flutter_whatsapp_clone/common/enum/message_enum.dart';
+import 'package:flutter_whatsapp_clone/widgets/video_player_item.dart';
 
 class DisplayMessage extends StatelessWidget {
   const DisplayMessage({
@@ -40,6 +41,11 @@ class DisplayMessage extends StatelessWidget {
             ),
           );
         },
+      );
+    }
+    if (type == MessageEnum.video) {
+      return VideoPlayerItem(
+        url: message,
       );
     }
     return Text(

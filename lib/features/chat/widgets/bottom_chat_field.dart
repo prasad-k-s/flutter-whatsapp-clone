@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_whatsapp_clone/colors.dart';
 import 'package:flutter_whatsapp_clone/common/enum/message_enum.dart';
 import 'package:flutter_whatsapp_clone/common/utility/pick_image.dart';
+import 'package:flutter_whatsapp_clone/common/utility/pick_video.dart';
 import 'package:flutter_whatsapp_clone/features/chat/controller/chat_controller.dart';
 
 class BottomChatField extends ConsumerStatefulWidget {
@@ -20,7 +21,7 @@ class BottomChatField extends ConsumerStatefulWidget {
 class _BottomChatFieldState extends ConsumerState<BottomChatField> {
   bool isShowSendButton = false;
   final TextEditingController textEditingController = TextEditingController();
-
+  bool isLoading = false;
   void sendTextButton() async {
     if (isShowSendButton) {
       ref.read(chatContollerProvider).sendTextMessage(
@@ -35,11 +36,11 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
     }
   }
 
-  void sendFileMessage(
+  Future<void> sendFileMessage(
     File file,
     MessageEnum messageEnum,
-  ) {
-    ref.read(chatContollerProvider).sendFileMessage(
+  ) async {
+    await ref.read(chatContollerProvider).sendFileMessage(
           context,
           file,
           widget.recieverUserId,
@@ -50,10 +51,34 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
   void selectImage() async {
     File? file = await pickImage(context);
     if (file != null) {
-      sendFileMessage(
+      setState(() {
+        isLoading = true;
+      });
+
+      await sendFileMessage(
         file,
         MessageEnum.image,
       );
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  void selectVideo() async {
+    File? file = await pickVideo(context);
+    if (file != null) {
+      setState(() {
+        isLoading = true;
+      });
+
+      await sendFileMessage(
+        file,
+        MessageEnum.video,
+      );
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -129,7 +154,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: selectVideo,
                         child: const Icon(
                           Icons.attach_file,
                           color: Colors.grey,
@@ -157,11 +182,18 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
             backgroundColor: const Color(0xFF128C7E),
             radius: 24,
             child: GestureDetector(
-              onTap: sendTextButton,
-              child: Icon(
-                isShowSendButton ? Icons.send : Icons.mic,
-                color: Colors.white,
-              ),
+              onTap: isLoading ? null : sendTextButton,
+              child: isLoading
+                  ? const Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                      ),
+                    )
+                  : Icon(
+                      isShowSendButton ? Icons.send : Icons.mic,
+                      color: Colors.white,
+                    ),
             ),
           ),
         ),
