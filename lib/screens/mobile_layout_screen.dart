@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_whatsapp_clone/colors.dart';
 import 'package:flutter_whatsapp_clone/features/auth/controller/auth_controller.dart';
-import 'package:flutter_whatsapp_clone/features/auth/repository/auth_repository.dart';
 import 'package:flutter_whatsapp_clone/features/select_contacts/screens/select_contacts_screen.dart';
 import 'package:flutter_whatsapp_clone/features/chat/widgets/contacts_list.dart';
 

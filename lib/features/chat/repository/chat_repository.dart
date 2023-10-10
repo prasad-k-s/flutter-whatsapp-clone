@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_whatsapp_clone/common/enum/message_enum.dart';
+import 'package:flutter_whatsapp_clone/common/repositories/common_firebase_storage_repositiry.dart';
 import 'package:flutter_whatsapp_clone/common/utility/snackbar.dart';
 import 'package:flutter_whatsapp_clone/models/chat_contact.dart';
 import 'package:flutter_whatsapp_clone/models/message.dart';
@@ -180,5 +183,69 @@ class ChatRepository {
         return messages;
       },
     );
+  }
+
+  void sendFileMessage({
+    required BuildContext context,
+    required File file,
+    required String recieverUserId,
+    required UserModel senderUserData,
+    required ProviderRef ref,
+    required MessageEnum messageEnum,
+  }) async {
+    try {
+     
+      var timeSent = DateTime.now();
+      var messageId = const Uuid().v1();
+
+      String url = await ref.read(commmonFirebaseStorageRepositoryProvider).storeFileToFirebase(
+            'chat/${messageEnum.type}/${senderUserData.uid}/$recieverUserId/$messageId',
+            file,
+          );
+      UserModel recieverUserData;
+      var userDataMap = await firestore.collection('users').doc(recieverUserId).get();
+      recieverUserData = UserModel.fromMap(userDataMap.data()!);
+      String contactMsg;
+
+      switch (messageEnum) {
+        case MessageEnum.image:
+          contactMsg = '📸 photo';
+          break;
+        case MessageEnum.video:
+          contactMsg = '🎥 video';
+          break;
+        case MessageEnum.audio:
+          contactMsg = '🎤 video';
+        case MessageEnum.gif:
+          contactMsg = 'GIF';
+          break;
+        default:
+          contactMsg = 'GIF';
+          break;
+      }
+
+      _saveDataToContactsSubCollection(
+          senderUserData: senderUserData,
+          recieverUserData: recieverUserData,
+          text: contactMsg,
+          timeSent: timeSent,
+          recieverUserId: recieverUserId);
+
+      _saveMessageToMessageSubCollection(
+        recieveUserId: recieverUserId,
+        text: url,
+        timeSent: timeSent,
+        messageId: messageId,
+        userName: senderUserData.name,
+        recieverUserName: recieverUserData.name,
+        messageType: messageEnum,
+      );
+      
+    } catch (e) {
+      if (context.mounted) {
+        showSnackbar(context: context, text: e.toString(), contentType: ContentType.failure, title: 'Oh no!');
+      }
+      
+    }
   }
 }

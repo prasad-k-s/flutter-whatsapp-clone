@@ -5,6 +5,7 @@ import 'package:flutter_whatsapp_clone/features/chat/widgets/bottom_chat_field.d
 import 'package:flutter_whatsapp_clone/features/auth/controller/auth_controller.dart';
 import 'package:flutter_whatsapp_clone/features/chat/widgets/chat_list.dart';
 
+
 class MobileChatScreen extends ConsumerWidget {
   const MobileChatScreen({super.key, required this.name, required this.uid});
   static const String routeName = '/mobile-chat-screen';
