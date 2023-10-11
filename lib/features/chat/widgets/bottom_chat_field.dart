@@ -3,11 +3,15 @@ import 'dart:io';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_sound/flutter_sound.dart';
 import 'package:flutter_whatsapp_clone/colors.dart';
 import 'package:flutter_whatsapp_clone/common/enum/message_enum.dart';
+import 'package:flutter_whatsapp_clone/common/utility/pick_GIF.dart';
 import 'package:flutter_whatsapp_clone/common/utility/pick_image.dart';
 import 'package:flutter_whatsapp_clone/common/utility/pick_video.dart';
 import 'package:flutter_whatsapp_clone/features/chat/controller/chat_controller.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class BottomChatField extends ConsumerStatefulWidget {
   const BottomChatField({
@@ -22,7 +26,27 @@ class BottomChatField extends ConsumerStatefulWidget {
 class _BottomChatFieldState extends ConsumerState<BottomChatField> {
   bool isShowSendButton = false;
   bool isShowEmoji = false;
+  bool isRecoderInit = false;
+  bool isRecording = false;
   FocusNode focusNode = FocusNode();
+  FlutterSoundRecorder? soundRecorder;
+
+  @override
+  void initState() {
+    super.initState();
+    soundRecorder = FlutterSoundRecorder();
+    openAudio();
+  }
+
+  void openAudio() async {
+    final status = await Permission.microphone.request();
+    if (status != PermissionStatus.granted) {
+      throw RecordingPermissionException('Mic permission denied!');
+    }
+    await soundRecorder!.openRecorder();
+    isRecoderInit = true;
+  }
+
   void hideEmojiContainer() {
     setState(() {
       isShowEmoji = false;
@@ -57,6 +81,17 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
     }
   }
 
+  void selectGIF() async {
+    final gif = await pickGIF(context);
+    if (gif != null && context.mounted) {
+      ref.read(chatContollerProvider).sendGIFMessage(
+            context: context,
+            gifUrl: gif.url,
+            recieverUserId: widget.recieverUserId,
+          );
+    }
+  }
+
   final TextEditingController textEditingController = TextEditingController();
   bool isLoading = false;
   void sendTextButton() async {
@@ -69,6 +104,26 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
 
       setState(() {
         textEditingController.clear();
+      });
+    } else {
+      var tempDir = await getTemporaryDirectory();
+      var path = '${tempDir.path}/flutter_sound.aac';
+      if (!isRecoderInit) {
+        return;
+      }
+      if (isRecording) {
+        await soundRecorder!.stopRecorder();
+        sendFileMessage(
+          File(path),
+          MessageEnum.audio,
+        );
+      } else {
+        await soundRecorder!.startRecorder(
+          toFile: path,
+        );
+      }
+      setState(() {
+        isRecording = !isRecording;
       });
     }
   }
@@ -122,6 +177,8 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
   @override
   void dispose() {
     textEditingController.dispose();
+    soundRecorder!.closeRecorder();
+    isRecoderInit = false;
     super.dispose();
   }
 
@@ -168,7 +225,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
                             ),
                           ),
                           GestureDetector(
-                            onTap: () {},
+                            onTap: selectGIF,
                             child: const Icon(
                               Icons.gif,
                               color: Colors.grey,
@@ -233,7 +290,11 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
                           ),
                         )
                       : Icon(
-                          isShowSendButton ? Icons.send : Icons.mic,
+                          isShowSendButton
+                              ? Icons.send
+                              : isRecording
+                                  ? Icons.close
+                                  : Icons.mic,
                           color: Colors.white,
                         ),
                 ),

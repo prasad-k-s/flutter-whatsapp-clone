@@ -60,4 +60,24 @@ class ChatController {
       );
     });
   }
+
+  void sendGIFMessage({
+    required BuildContext context,
+    required String gifUrl,
+    required String recieverUserId,
+  }) async {
+    //change the gif url to support in flutter.
+
+    int gifUrlPartIndex = gifUrl.lastIndexOf('-') + 1;
+    String gifUrlPart = gifUrl.substring(gifUrlPartIndex);
+    String newgifUrl = 'https://i.giphy.com/media/$gifUrlPart/200.gif';
+    ref.read(userDataAuthProvider).whenData((senderUser) => {
+          chatRepository.sendGIFMessage(
+            context: context,
+            gifUrl: newgifUrl,
+            recieverUserId: recieverUserId,
+            senderUser: senderUser!,
+          )
+        });
+  }
 }

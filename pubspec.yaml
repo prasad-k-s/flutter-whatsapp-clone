@@ -45,12 +45,17 @@ dependencies:
   flutter_otp_text_field: ^1.1.1
   file_picker: ^5.5.0
   flutter_contacts: ^1.1.7+1
-  uuid: ^4.1.0
+  uuid: ^3.0.7
   intl: ^0.18.1
   modal_progress_hud_nsn: ^0.4.0
   cached_network_image: ^3.3.0
   cached_video_player: ^2.0.4
   emoji_picker_flutter: ^1.6.2
+  enough_giphy_flutter: ^0.4.1
+  permission_handler: ^11.0.1
+  path_provider: ^2.1.1
+  flutter_sound: ^9.2.13
+  audioplayers: ^5.2.0
 
 
 dev_dependencies:
