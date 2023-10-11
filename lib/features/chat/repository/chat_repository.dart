@@ -303,4 +303,39 @@ class ChatRepository {
       }
     }
   }
+
+  void setChatMessageSeen({
+    required BuildContext context,
+    required String recieveUserId,
+    required String messageId,
+  }) async {
+    try {
+      await firestore
+          .collection('users')
+          .doc(auth.currentUser!.uid)
+          .collection('chats')
+          .doc(recieveUserId)
+          .collection('messages')
+          .doc(messageId)
+          .update({'isSeen': true});
+
+      await firestore
+          .collection('users')
+          .doc(recieveUserId)
+          .collection('chats')
+          .doc(auth.currentUser!.uid)
+          .collection('messages')
+          .doc(messageId)
+          .update({'isSeen': true});
+    } catch (e) {
+      if (context.mounted) {
+        showSnackbar(
+          context: context,
+          text: e.toString(),
+          contentType: ContentType.failure,
+          title: 'Oh no!',
+        );
+      }
+    }
+  }
 }
