@@ -1,15 +1,16 @@
 import 'dart:io';
-
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:flutter_whatsapp_clone/colors.dart';
 import 'package:flutter_whatsapp_clone/common/enum/message_enum.dart';
+import 'package:flutter_whatsapp_clone/common/providers/message_reply_provider.dart';
 import 'package:flutter_whatsapp_clone/common/utility/pick_GIF.dart';
 import 'package:flutter_whatsapp_clone/common/utility/pick_image.dart';
 import 'package:flutter_whatsapp_clone/common/utility/pick_video.dart';
 import 'package:flutter_whatsapp_clone/features/chat/controller/chat_controller.dart';
+import 'package:flutter_whatsapp_clone/widgets/message_reply_preview.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -33,9 +34,8 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
 
   @override
   void initState() {
-    super.initState();
-    soundRecorder = FlutterSoundRecorder();
     openAudio();
+    super.initState();
   }
 
   void openAudio() async {
@@ -43,6 +43,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
     if (status != PermissionStatus.granted) {
       throw RecordingPermissionException('Mic permission denied!');
     }
+    soundRecorder = FlutterSoundRecorder();
     await soundRecorder!.openRecorder();
     isRecoderInit = true;
   }
@@ -177,15 +178,21 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
   @override
   void dispose() {
     textEditingController.dispose();
-    soundRecorder!.closeRecorder();
+    if (isRecoderInit) {
+      soundRecorder!.closeRecorder();
+    }
+
     isRecoderInit = false;
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final messageReply = ref.watch(messageReplyProvider);
+    final isShowMessageReply = messageReply != null;
     return Column(
       children: [
+        if (isShowMessageReply) const MessageReplyPreview(),
         Row(
           children: [
             Expanded(

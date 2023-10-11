@@ -1,5 +1,4 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-
 import 'package:flutter_whatsapp_clone/common/enum/message_enum.dart';
 
 class Message {
@@ -10,7 +9,13 @@ class Message {
   final MessageEnum type;
   final bool isSeen;
   final DateTime timeSent;
+  final String repliedMessage;
+  final String repliedTo;
+  final MessageEnum repliedmessageType;
   Message({
+    required this.repliedMessage,
+    required this.repliedTo,
+    required this.repliedmessageType,
     required this.senderId,
     required this.recieverId,
     required this.text,
@@ -28,6 +33,9 @@ class Message {
     MessageEnum? type,
     bool? isSeen,
     DateTime? timeSent,
+    String? repliedMessage,
+    String? repliedTo,
+    MessageEnum? repliedmessageType,
   }) {
     return Message(
       senderId: senderId ?? this.senderId,
@@ -37,6 +45,9 @@ class Message {
       type: type ?? this.type,
       isSeen: isSeen ?? this.isSeen,
       timeSent: timeSent ?? this.timeSent,
+      repliedMessage: repliedMessage ?? this.repliedMessage,
+      repliedTo: repliedTo ?? this.repliedTo,
+      repliedmessageType: repliedmessageType ?? this.repliedmessageType,
     );
   }
 
@@ -49,6 +60,9 @@ class Message {
       'type': type.type,
       'isSeen': isSeen,
       'timeSent': timeSent.millisecondsSinceEpoch,
+      'repliedMessage': repliedMessage,
+      'repliedTo': repliedTo,
+      'repliedmessageType': repliedmessageType.type,
     };
   }
 
@@ -61,6 +75,9 @@ class Message {
       type: (map['type'] as String).toEnum(),
       isSeen: map['isSeen'] as bool,
       timeSent: DateTime.fromMillisecondsSinceEpoch(map['timeSent'] as int),
+      repliedMessage: map['repliedMessage'] as String,
+      repliedTo: map['repliedTo'] as String,
+      repliedmessageType: (map['repliedmessageType'] as String).toEnum(),
     );
   }
 }

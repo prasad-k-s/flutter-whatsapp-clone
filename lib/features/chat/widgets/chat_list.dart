@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_whatsapp_clone/common/enum/message_enum.dart';
+import 'package:flutter_whatsapp_clone/common/providers/message_reply_provider.dart';
 import 'package:flutter_whatsapp_clone/common/widgets/error.dart';
 import 'package:flutter_whatsapp_clone/features/chat/controller/chat_controller.dart';
 import 'package:flutter_whatsapp_clone/models/message.dart';
@@ -28,6 +30,16 @@ class _ChatListState extends ConsumerState<ChatList> {
   void dispose() {
     scrollController.dispose();
     super.dispose();
+  }
+
+  void onMessageSwipe({required String message, required bool isMe, required MessageEnum messageEnum}) {
+    ref.read(messageReplyProvider.notifier).update(
+          (state) => MessageReply(
+            message: message,
+            isMe: isMe,
+            messageEnum: messageEnum,
+          ),
+        );
   }
 
   @override
@@ -61,6 +73,14 @@ class _ChatListState extends ConsumerState<ChatList> {
                   messageData.timeSent,
                 ),
                 type: messageData.type,
+                userName: messageData.repliedTo,
+                repliedText: messageData.repliedMessage,
+                repliedMessageType: messageData.repliedmessageType,
+                onLeftSwipe: () => onMessageSwipe(
+                  isMe: true,
+                  message: messageData.text,
+                  messageEnum: messageData.type,
+                ),
               );
             }
             return SenderMessageCard(
@@ -69,6 +89,14 @@ class _ChatListState extends ConsumerState<ChatList> {
                 messageData.timeSent,
               ),
               type: messageData.type,
+              userName: messageData.repliedTo,
+              repliedText: messageData.repliedMessage,
+              repliedMessageType: messageData.repliedmessageType,
+              onRightSwipe: () => onMessageSwipe(
+                isMe: false,
+                message: messageData.text,
+                messageEnum: messageData.type,
+              ),
             );
           },
         );
