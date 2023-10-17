@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp_clone/colors.dart';
 import 'package:flutter_whatsapp_clone/features/auth/screens/login_screen.dart';
@@ -5,6 +7,7 @@ import 'package:flutter_whatsapp_clone/features/auth/screens/otp_screen.dart';
 import 'package:flutter_whatsapp_clone/features/auth/screens/user_information_screen.dart';
 import 'package:flutter_whatsapp_clone/features/select_contacts/screens/select_contacts_screen.dart';
 import 'package:flutter_whatsapp_clone/features/chat/screens/mobile_chat_screen.dart';
+import 'package:flutter_whatsapp_clone/features/status/screens/confirm_status_screen.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
@@ -44,6 +47,16 @@ Route<dynamic> generateRoute(RouteSettings settings) {
           return MobileChatScreen(
             name: name,
             uid: uid,
+          );
+        },
+      );
+    case ConfirmStatusScreen.routeName:
+      return MaterialPageRoute(
+        builder: (context) {
+          final arguments = settings.arguments as File;
+
+          return ConfirmStatusScreen(
+            file: arguments,
           );
         },
       );

@@ -65,6 +65,6 @@
  <key>NSContactsUsageDescription</key>
     <string>Need permission to display contacts</string>
 	<key>NSAppleMusicUsageDescription</key>
-      <string>Need this permission to record <audio src=""></audio></string>
+      <string>Need this permission to record</string>
 </dict>
 </plist>
