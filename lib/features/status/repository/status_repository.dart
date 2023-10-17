@@ -131,4 +131,54 @@ class StatusRepository {
       }
     }
   }
+
+  Future<List<Status>> getStatus({
+    required BuildContext context,
+  }) async {
+    List<Status> statusData = [];
+    try {
+      List<Contact> contacts = [];
+
+      if (await FlutterContacts.requestPermission()) {
+        contacts = await FlutterContacts.getContacts(withProperties: true);
+      }
+      for (var contact in contacts) {
+        var statusesSnapshot = await firebaseFirestore
+            .collection('status')
+            .where(
+              'phoneNumber',
+              isEqualTo: contact.phones[0].number.replaceAll(' ', ''),
+            )
+            .where(
+              'createdAt',
+              isGreaterThan: DateTime.now()
+                  .subtract(
+                    const Duration(hours: 24),
+                  )
+                  .millisecondsSinceEpoch,
+            )
+            .get();
+
+        for (var tempData in statusesSnapshot.docs) {
+          Status tempStatus = Status.fromMap(tempData.data());
+          if (tempStatus.whoCanSee.contains(firebaseAuth.currentUser!.uid)) {
+            statusData.add(tempStatus);
+          }
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        debugPrint(
+          e.toString(),
+        );
+        showSnackbar(
+          context: context,
+          text: e.toString(),
+          contentType: ContentType.failure,
+          title: 'Oh no!',
+        );
+      }
+    }
+    return statusData;
+  }
 }

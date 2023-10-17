@@ -8,6 +8,8 @@ import 'package:flutter_whatsapp_clone/features/auth/screens/user_information_sc
 import 'package:flutter_whatsapp_clone/features/select_contacts/screens/select_contacts_screen.dart';
 import 'package:flutter_whatsapp_clone/features/chat/screens/mobile_chat_screen.dart';
 import 'package:flutter_whatsapp_clone/features/status/screens/confirm_status_screen.dart';
+import 'package:flutter_whatsapp_clone/features/status/screens/status_screen.dart';
+import 'package:flutter_whatsapp_clone/models/status_model.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
@@ -57,6 +59,16 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
           return ConfirmStatusScreen(
             file: arguments,
+          );
+        },
+      );
+    case StatusScreen.routeName:
+      return MaterialPageRoute(
+        builder: (context) {
+          final status = settings.arguments as Status;
+
+          return StatusScreen(
+            status: status,
           );
         },
       );

@@ -18,89 +18,90 @@ class ContactsList extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),
       child: StreamBuilder<List<ChatContact>>(
-          stream: ref.watch(chatContollerProvider).chatContacts(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            if (snapshot.hasError) {
-              return MyErrorWidget(
-                error: snapshot.error.toString(),
-              );
-            }
-            if (snapshot.data!.isEmpty) {
-              return const Center(
-                child: Text(
-                  'You haven\'t texted anyone yet',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24,
-                  ),
+        stream: ref.watch(chatContollerProvider).chatContacts(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (snapshot.hasError) {
+            return MyErrorWidget(
+              error: snapshot.error.toString(),
+            );
+          }
+          if (snapshot.data!.isEmpty) {
+            return const Center(
+              child: Text(
+                'You haven\'t texted anyone yet',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24,
                 ),
-              );
-            }
-            return ListView.builder(
-              shrinkWrap: true,
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                var chatContactData = snapshot.data![index];
-                return Column(
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        Navigator.of(context).pushNamed(
-                          MobileChatScreen.routeName,
-                          arguments: {
-                            "uid": chatContactData.contactId,
-                            "name": chatContactData.name,
-                          },
-                        );
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
-                        child: ListTile(
-                          title: Text(
-                            chatContactData.name,
+              ),
+            );
+          }
+          return ListView.builder(
+            shrinkWrap: true,
+            itemCount: snapshot.data!.length,
+            itemBuilder: (context, index) {
+              var chatContactData = snapshot.data![index];
+              return Column(
+                children: [
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).pushNamed(
+                        MobileChatScreen.routeName,
+                        arguments: {
+                          "uid": chatContactData.contactId,
+                          "name": chatContactData.name,
+                        },
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: ListTile(
+                        title: Text(
+                          chatContactData.name,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 18,
+                          ),
+                        ),
+                        subtitle: Padding(
+                          padding: const EdgeInsets.only(top: 6.0),
+                          child: Text(
+                            chatContactData.lastMessage,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 18,
-                            ),
+                            style: const TextStyle(fontSize: 15),
                           ),
-                          subtitle: Padding(
-                            padding: const EdgeInsets.only(top: 6.0),
-                            child: Text(
-                              chatContactData.lastMessage,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(fontSize: 15),
-                            ),
+                        ),
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.grey,
+                          backgroundImage: NetworkImage(chatContactData.profilepic),
+                          radius: 30,
+                        ),
+                        trailing: Text(
+                          DateFormat.Hm().format(
+                            chatContactData.timeSent,
                           ),
-                          leading: CircleAvatar(
-                            backgroundColor: Colors.grey,
-                            backgroundImage: NetworkImage(chatContactData.profilepic),
-                            radius: 30,
-                          ),
-                          trailing: Text(
-                            DateFormat.Hm().format(
-                              chatContactData.timeSent,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              color: Colors.grey,
-                              fontSize: 13,
-                            ),
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.grey,
+                            fontSize: 13,
                           ),
                         ),
                       ),
                     ),
-                    const Divider(color: dividerColor, indent: 85),
-                  ],
-                );
-              },
-            );
-          }),
+                  ),
+                  const Divider(color: dividerColor, indent: 85),
+                ],
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
