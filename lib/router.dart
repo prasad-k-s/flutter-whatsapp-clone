@@ -5,6 +5,7 @@ import 'package:flutter_whatsapp_clone/colors.dart';
 import 'package:flutter_whatsapp_clone/features/auth/screens/login_screen.dart';
 import 'package:flutter_whatsapp_clone/features/auth/screens/otp_screen.dart';
 import 'package:flutter_whatsapp_clone/features/auth/screens/user_information_screen.dart';
+import 'package:flutter_whatsapp_clone/features/group/screens/create_group_screen.dart';
 import 'package:flutter_whatsapp_clone/features/select_contacts/screens/select_contacts_screen.dart';
 import 'package:flutter_whatsapp_clone/features/chat/screens/mobile_chat_screen.dart';
 import 'package:flutter_whatsapp_clone/features/status/screens/confirm_status_screen.dart';
@@ -70,6 +71,12 @@ Route<dynamic> generateRoute(RouteSettings settings) {
           return StatusScreen(
             status: status,
           );
+        },
+      );
+    case CreateGroupScreen.routeName:
+      return MaterialPageRoute(
+        builder: (context) {
+          return const CreateGroupScreen();
         },
       );
     default:
