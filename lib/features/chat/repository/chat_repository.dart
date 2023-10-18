@@ -10,6 +10,7 @@ import 'package:flutter_whatsapp_clone/common/providers/message_reply_provider.d
 import 'package:flutter_whatsapp_clone/common/repositories/common_firebase_storage_repositiry.dart';
 import 'package:flutter_whatsapp_clone/common/utility/snackbar.dart';
 import 'package:flutter_whatsapp_clone/models/chat_contact.dart';
+import 'package:flutter_whatsapp_clone/models/group.dart';
 import 'package:flutter_whatsapp_clone/models/message.dart';
 import 'package:flutter_whatsapp_clone/models/user_model.dart';
 import 'package:uuid/uuid.dart';
@@ -52,6 +53,22 @@ class ChatRepository {
         }
 
         return contacts;
+      },
+    );
+  }
+
+  Stream<List<GroupChat>> getChatGroups() {
+    return firestore.collection('groups').snapshots().map(
+      (event) {
+        List<GroupChat> groups = [];
+        for (var document in event.docs) {
+          var group = GroupChat.fromMap(document.data());
+          if (group.membersUid.contains(auth.currentUser!.uid)) {
+            groups.add(group);
+          }
+        }
+
+        return groups;
       },
     );
   }

@@ -8,7 +8,7 @@ import 'package:flutter_contacts/contact.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_whatsapp_clone/common/repositories/common_firebase_storage_repositiry.dart';
 import 'package:flutter_whatsapp_clone/common/utility/snackbar.dart';
-import 'package:flutter_whatsapp_clone/models/group.dart' as model;
+import 'package:flutter_whatsapp_clone/models/group.dart';
 import 'package:uuid/uuid.dart';
 
 final groupRepositoryProvider = Provider(
@@ -60,7 +60,7 @@ class GroupRepository {
             'group/$groupId',
             profileImage,
           );
-      model.Group group = model.Group(
+      GroupChat group = GroupChat(
         senderId: auth.currentUser!.uid,
         name: name,
         groupId: groupId,
@@ -70,6 +70,7 @@ class GroupRepository {
           auth.currentUser!.uid,
           ...uids,
         ],
+        timeSent: DateTime.now(),
       );
       await firestore.collection('groups').doc(groupId).set(
             group.toMap(),

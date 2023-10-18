@@ -7,6 +7,7 @@ import 'package:flutter_whatsapp_clone/common/providers/message_reply_provider.d
 import 'package:flutter_whatsapp_clone/features/auth/controller/auth_controller.dart';
 import 'package:flutter_whatsapp_clone/features/chat/repository/chat_repository.dart';
 import 'package:flutter_whatsapp_clone/models/chat_contact.dart';
+import 'package:flutter_whatsapp_clone/models/group.dart';
 import 'package:flutter_whatsapp_clone/models/message.dart';
 import 'package:flutter_whatsapp_clone/models/user_model.dart';
 
@@ -27,6 +28,10 @@ class ChatController {
 
   Stream<List<ChatContact>> chatContacts() {
     return chatRepository.getChatContacts();
+  }
+
+  Stream<List<GroupChat>> chatGroups() {
+    return chatRepository.getChatGroups();
   }
 
   Stream<List<Message>> chatStream(String recieverId) {
