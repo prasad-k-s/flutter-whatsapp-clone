@@ -5,48 +5,55 @@ import 'package:flutter_whatsapp_clone/features/chat/widgets/bottom_chat_field.d
 import 'package:flutter_whatsapp_clone/features/auth/controller/auth_controller.dart';
 import 'package:flutter_whatsapp_clone/features/chat/widgets/chat_list.dart';
 
-
 class MobileChatScreen extends ConsumerWidget {
-  const MobileChatScreen({super.key, required this.name, required this.uid});
+  const MobileChatScreen({
+    super.key,
+    required this.name,
+    required this.uid,
+    required this.isGroupChat,
+  });
   static const String routeName = '/mobile-chat-screen';
   final String name;
   final String uid;
+  final bool isGroupChat;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: appBarColor,
-        title: StreamBuilder(
-          stream: ref.watch(authControllerProvider).userData(uid),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Text(
-                'Loading....',
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                ),
-              );
-            } else if (snapshot.hasError) {
-              return const Text('');
-            } else {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(name),
-                  Text(
-                    snapshot.data!.isOnline == true ? 'Online' : 'Offline',
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              );
-            }
-          },
-        ),
+        title: isGroupChat
+            ? Text(name)
+            : StreamBuilder(
+                stream: ref.watch(authControllerProvider).userData(uid),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Text(
+                      'Loading....',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    );
+                  } else if (snapshot.hasError) {
+                    return const Text('');
+                  } else {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(name),
+                        Text(
+                          snapshot.data!.isOnline == true ? 'Online' : 'Offline',
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                },
+              ),
         centerTitle: false,
         actions: [
           IconButton(
@@ -69,10 +76,12 @@ class MobileChatScreen extends ConsumerWidget {
             Expanded(
               child: ChatList(
                 recieverId: uid,
+                isGroupChat: isGroupChat,
               ),
             ),
             BottomChatField(
               recieverUserId: uid,
+              isGroupChat: isGroupChat,
             ),
           ],
         ),

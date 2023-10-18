@@ -44,6 +44,7 @@ class SelectContactReposioty {
             Navigator.of(context).pushNamed(MobileChatScreen.routeName, arguments: {
               'name': userData.name,
               'uid': userData.uid,
+              "isGroupChat": false,
             });
           }
         }

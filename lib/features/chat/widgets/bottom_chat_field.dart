@@ -17,9 +17,11 @@ import 'package:permission_handler/permission_handler.dart';
 class BottomChatField extends ConsumerStatefulWidget {
   const BottomChatField({
     required this.recieverUserId,
+    required this.isGroupChat,
     super.key,
   });
   final String recieverUserId;
+  final bool isGroupChat;
   @override
   ConsumerState<BottomChatField> createState() => _BottomChatFieldState();
 }
@@ -89,6 +91,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
             context: context,
             gifUrl: gif.url,
             recieverUserId: widget.recieverUserId,
+            isGroupChat: widget.isGroupChat,
           );
     }
   }
@@ -101,6 +104,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
             context,
             textEditingController.text,
             widget.recieverUserId,
+            widget.isGroupChat,
           );
 
       setState(() {
@@ -138,6 +142,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
           file,
           widget.recieverUserId,
           messageEnum,
+          widget.isGroupChat,
         );
   }
 

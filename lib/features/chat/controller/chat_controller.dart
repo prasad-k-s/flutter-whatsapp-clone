@@ -38,7 +38,12 @@ class ChatController {
     return chatRepository.getChatMessages(recieverId);
   }
 
-  void sendTextMessage(BuildContext context, String text, String recieverUserId) {
+  void sendTextMessage(
+    BuildContext context,
+    String text,
+    String recieverUserId,
+    bool isGroupChat,
+  ) {
     final messageReply = ref.read(messageReplyProvider);
     ref.read(userDataAuthProvider).whenData((UserModel? senderUser) {
       chatRepository.sendTextMessage(
@@ -47,6 +52,7 @@ class ChatController {
         recieverUserId: recieverUserId,
         senderUser: senderUser!,
         messageReply: messageReply,
+        isGroupChat: isGroupChat,
       );
     });
   }
@@ -56,18 +62,21 @@ class ChatController {
     File file,
     String recieverUserId,
     MessageEnum messageEnum,
+    bool isGroupChat,
   ) async {
     final messageReply = ref.read(messageReplyProvider);
     ref.read(userDataAuthProvider).whenData(
       (UserModel? senderUserData) async {
         await chatRepository.sendFileMessage(
-            context: context,
-            recieverUserId: recieverUserId,
-            file: file,
-            senderUserData: senderUserData!,
-            ref: ref,
-            messageEnum: messageEnum,
-            messageReply: messageReply);
+          context: context,
+          recieverUserId: recieverUserId,
+          file: file,
+          senderUserData: senderUserData!,
+          ref: ref,
+          messageEnum: messageEnum,
+          messageReply: messageReply,
+          isGroupChat: isGroupChat,
+        );
       },
     );
   }
@@ -76,6 +85,7 @@ class ChatController {
     required BuildContext context,
     required String gifUrl,
     required String recieverUserId,
+    required bool isGroupChat,
   }) async {
     //change the gif url to support in flutter.
     final messageReply = ref.read(messageReplyProvider);
@@ -85,11 +95,13 @@ class ChatController {
     ref.read(userDataAuthProvider).whenData(
           (senderUser) => {
             chatRepository.sendGIFMessage(
-                context: context,
-                gifUrl: newgifUrl,
-                recieverUserId: recieverUserId,
-                senderUser: senderUser!,
-                messageReply: messageReply)
+              context: context,
+              gifUrl: newgifUrl,
+              recieverUserId: recieverUserId,
+              senderUser: senderUser!,
+              messageReply: messageReply,
+              isGroupChat: isGroupChat,
+            )
           },
         );
     ref.read(messageReplyProvider.notifier).update((state) => null);
@@ -105,5 +117,9 @@ class ChatController {
       recieveUserId: recieveUserId,
       messageId: messageId,
     );
+  }
+
+  Stream<List<Message>> getGroupChatMessages(String groupId) {
+    return chatRepository.getGroupChatMessages(groupId);
   }
 }
