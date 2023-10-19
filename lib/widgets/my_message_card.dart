@@ -13,6 +13,7 @@ class MyMessageCard extends StatelessWidget {
   final String repliedText;
   final MessageEnum repliedMessageType;
   final bool isSeen;
+  final bool isGroupChat;
 
   const MyMessageCard({
     Key? key,
@@ -24,6 +25,7 @@ class MyMessageCard extends StatelessWidget {
     required this.repliedText,
     required this.repliedMessageType,
     required this.isSeen,
+    required this.isGroupChat,
   }) : super(key: key);
 
   @override
@@ -94,29 +96,30 @@ class MyMessageCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                Positioned(
-                  bottom: 4,
-                  right: 10,
-                  child: Row(
-                    children: [
-                      Text(
-                        date,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          color: Colors.white60,
+                if (!isGroupChat)
+                  Positioned(
+                    bottom: 4,
+                    right: 10,
+                    child: Row(
+                      children: [
+                        Text(
+                          date,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            color: Colors.white60,
+                          ),
                         ),
-                      ),
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      Icon(
-                        isSeen ? Icons.done_all : Icons.done,
-                        size: 20,
-                        color: isSeen ? Colors.blue : Colors.white60,
-                      ),
-                    ],
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        Icon(
+                          isSeen ? Icons.done_all : Icons.done,
+                          size: 20,
+                          color: isSeen ? Colors.blue : Colors.white60,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
               ],
             ),
           ),

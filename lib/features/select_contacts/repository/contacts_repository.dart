@@ -45,6 +45,7 @@ class SelectContactReposioty {
               'name': userData.name,
               'uid': userData.uid,
               "isGroupChat": false,
+              "profilePic": userData.profilePic,
             });
           }
         }

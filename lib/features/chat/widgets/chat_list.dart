@@ -82,6 +82,7 @@ class _ChatListState extends ConsumerState<ChatList> {
                 date: DateFormat.Hm().format(
                   messageData.timeSent,
                 ),
+                isGroupChat: widget.isGroupChat,
                 type: messageData.type,
                 userName: messageData.repliedTo,
                 repliedText: messageData.repliedMessage,
@@ -99,6 +100,7 @@ class _ChatListState extends ConsumerState<ChatList> {
               date: DateFormat.Hm().format(
                 messageData.timeSent,
               ),
+              isGroupChat: widget.isGroupChat,
               type: messageData.type,
               userName: messageData.repliedTo,
               repliedText: messageData.repliedMessage,
